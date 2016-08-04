@@ -1,5 +1,6 @@
 Helper = require('hubot-test-helper')
 chai = require 'chai'
+nock = require 'nock'
 
 expect = chai.expect
 
@@ -10,6 +11,10 @@ helper = new Helper([
 process.env.HUBOT_LOG_LEVEL='error'
 
 describe '<%= scriptName %>', ->
+  before (done) ->
+    nock.load './test/<%= scriptName %>-http-mock.json'
+    setTimeout done, 1000 # Give Nock some time to load
+
   beforeEach ->
     @room = helper.createRoom()
 

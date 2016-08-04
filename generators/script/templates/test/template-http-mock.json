@@ -1,0 +1,19 @@
+[
+  {
+    "scope": "http:\/\/www.example.com/",
+    "method": "GET",
+    "path": "\/resource",
+    "body": "",
+    "status": 200,
+    "response": {
+      "field": "value"
+    },
+    "headers": {
+      "date": "Thu, 21 Jul 2016 09:31:59 GMT",
+      "cache-control": "no-store",
+      "pragma": "no-cache",
+      "content-type": "application\/json;charset=UTF-8",
+      "connection": "close"
+    }
+  }
+]

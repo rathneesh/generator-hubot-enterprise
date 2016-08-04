@@ -125,10 +125,11 @@ var HubotScriptGenerator = yeoman.generators.Base.extend({
 
       this.mkdir('src');
       this.template('src/template.coffee', 'src/' + this.scriptName + '.coffee');
-	  
+
 	  this.mkdir('lib');
-	  
+
       this.mkdir('test');
+      this.template('test/template-test.coffee', 'test/' + this.scriptName + '-test.coffee');
       this.template('test/template-test.coffee', 'test/' + this.scriptName + '-test.coffee');
 
       this.copy('gitignore', '.gitignore');
