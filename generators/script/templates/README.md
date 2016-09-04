@@ -11,6 +11,7 @@ See [`src/<%= scriptName %>.coffee`](src/<%= scriptName %>.coffee) for full docu
   2. [Configure your chat platform](https://github.com/eedevops/hubot-enterprise/wiki/bootstrap#1-select-a-collaboration-platform)
   3. `docker pull <%= dockerName %>/<%= appname %>`
   4. run docker:
+
     ```bash
 	  docker run \
        -p 8080:8080 \
