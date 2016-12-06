@@ -5,7 +5,8 @@ var yeoman = require('yeoman-generator');
 var yosay = require('yosay');
 var chalk = require('chalk');
 var npmName = require('npm-name');
-
+var _ = require('lodash');
+require('lodash-addons');
 
 var hubotStartSay = function() {
   return  '                     _____________________________  ' + "\n" +
@@ -44,8 +45,9 @@ var hubotEndSay = function() {
           "\n";
 };
 
-var HubotGenerator = yeoman.generators.Base.extend({
+var HubotGenerator = yeoman.Base.extend({
 
+  
   determineDefaultOwner: function() {
     var userName;
     var userEmail;
@@ -70,7 +72,7 @@ var HubotGenerator = yeoman.generators.Base.extend({
   },
 
   determineDefaultName: function() {
-    return this._.slugify(this.appname);
+    return _.slugify(this.appname);
   },
 
   // defaults
@@ -81,7 +83,7 @@ var HubotGenerator = yeoman.generators.Base.extend({
 
 
   constructor: function () {
-    yeoman.generators.Base.apply(this, arguments);
+    yeoman.Base.apply(this, arguments);
 
     // FIXME add documentation to these
     this.option('owner', {
@@ -141,6 +143,8 @@ var HubotGenerator = yeoman.generators.Base.extend({
     if (this.options.adapter == true) {
       this.env.error("Missing adapter name. Make sure to specify it like --adapter=<adapter>");
     }
+
+    console.log('Finished constructor');
   },
 
   initializing: function () {
@@ -154,10 +158,14 @@ var HubotGenerator = yeoman.generators.Base.extend({
 
     this.hubotScripts = [
     ];
+
+    console.log('Finished init');
   },
 
   prompting: {
     askFor: function () {
+      console.log('Began askFor')
+      console.log(this.options);
       var done = this.async();
       var botOwner = this.determineDefaultOwner();
 
@@ -171,14 +179,21 @@ var HubotGenerator = yeoman.generators.Base.extend({
       }
 
       this.log(hubotStartSay());
-      this.prompt(prompts, function (props) {
-        this.botOwner = this.options.owner || props.botOwner;
-
+      console.log('prompts',prompts);
+      this.botOwner = this.options.owner;
+      if (prompts.length > 0) {
+        this.prompt(prompts, function (props) {
+          this.botOwner = this.botOwner || props.botOwner;
+          done();
+        }.bind(this));
+      } else {
         done();
-      }.bind(this));
+      }
     },
 
     askForBotNameAndDescription: function() {
+      console.log('Began ask');
+
       var done = this.async();
       var botName = this.determineDefaultName()
 
@@ -199,16 +214,22 @@ var HubotGenerator = yeoman.generators.Base.extend({
           default: this.defaultDescription
         });
       }
-
-      this.prompt(prompts, function (props) {
-        this.botName = this.options.name || props.botName;
-        this.botDescription = this.options.description || props.botDescription;
-
+      console.log('prompts',prompts);
+      this.botName = this.options.name;
+      this.botDescription = this.options.botDescription;
+      if (prompts.length > 0) {
+        this.prompt(prompts, function (props) {
+          this.botName = this.botName || props.botName;
+          this.botDescription = this.botDescription || props.botDescription;
+          done();
+        }.bind(this));
+      } else {
         done();
-      }.bind(this));
+      }
     },
 
     askForBotAdapter: function() {
+      console.log('Began askForBotAdapter');
       var done = this.async();
 
       var prompts = [];
@@ -232,26 +253,34 @@ var HubotGenerator = yeoman.generators.Base.extend({
                 done("Can't find that adapter on NPM, try again?");
                 return;
               }
-
+              console.log('Finished askForBotAdapter');
               done(null, true);
             });
           }
         });
       }
 
-      this.prompt(prompts, function (props) {
-        this.botAdapter = this.options.adapter || props.botAdapter;
-
+      this.botAdapter = this.options.adapter;
+      if (prompts.length > 0) {
+        this.prompt(prompts, function (props) {
+          this.botAdapter = this.botAdapter || props.botAdapter;
+          done();
+        }.bind(this));
+      } else {
         done();
-      }.bind(this));
+      }
     }
   },
 
   writing: {
     app: function () {
+      console.log('Writing...');
       this.mkdir('bin');
       this.copy('bin/hubot', 'bin/hubot');
       this.copy('bin/hubot.cmd', 'bin/hubot.cmd');
+      this.copy('bin/install', 'bin/install');
+      this.copy('bin/install.cmd', 'bin/install.cmd');
+
 
       this.template('Procfile', 'Procfile');
       this.template('README.md', 'README.md');
