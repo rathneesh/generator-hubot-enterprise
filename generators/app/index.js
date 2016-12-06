@@ -143,8 +143,6 @@ var HubotGenerator = yeoman.Base.extend({
     if (this.options.adapter == true) {
       this.env.error("Missing adapter name. Make sure to specify it like --adapter=<adapter>");
     }
-
-    console.log('Finished constructor');
   },
 
   initializing: function () {
@@ -158,14 +156,10 @@ var HubotGenerator = yeoman.Base.extend({
 
     this.hubotScripts = [
     ];
-
-    console.log('Finished init');
   },
 
   prompting: {
     askFor: function () {
-      console.log('Began askFor')
-      console.log(this.options);
       var done = this.async();
       var botOwner = this.determineDefaultOwner();
 
@@ -179,7 +173,6 @@ var HubotGenerator = yeoman.Base.extend({
       }
 
       this.log(hubotStartSay());
-      console.log('prompts',prompts);
       this.botOwner = this.options.owner;
       if (prompts.length > 0) {
         this.prompt(prompts, function (props) {
@@ -192,8 +185,6 @@ var HubotGenerator = yeoman.Base.extend({
     },
 
     askForBotNameAndDescription: function() {
-      console.log('Began ask');
-
       var done = this.async();
       var botName = this.determineDefaultName()
 
@@ -214,7 +205,7 @@ var HubotGenerator = yeoman.Base.extend({
           default: this.defaultDescription
         });
       }
-      console.log('prompts',prompts);
+
       this.botName = this.options.name;
       this.botDescription = this.options.botDescription;
       if (prompts.length > 0) {
@@ -229,7 +220,6 @@ var HubotGenerator = yeoman.Base.extend({
     },
 
     askForBotAdapter: function() {
-      console.log('Began askForBotAdapter');
       var done = this.async();
 
       var prompts = [];
@@ -253,7 +243,6 @@ var HubotGenerator = yeoman.Base.extend({
                 done("Can't find that adapter on NPM, try again?");
                 return;
               }
-              console.log('Finished askForBotAdapter');
               done(null, true);
             });
           }
@@ -274,7 +263,6 @@ var HubotGenerator = yeoman.Base.extend({
 
   writing: {
     app: function () {
-      console.log('Writing...');
       this.mkdir('bin');
       this.copy('bin/hubot', 'bin/hubot');
       this.copy('bin/hubot.cmd', 'bin/hubot.cmd');
