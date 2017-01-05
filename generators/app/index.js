@@ -273,32 +273,32 @@ var HubotGenerator = yeoman.generators.Base.extend({
 
         if(integrationsStr==null || integrationsStr == undefined){
           done();
-        }
+        } else{
+        //it seems like the done() function doesnt return, enclosed the following 
+        //code in an else clause
+          var integrationsStrArray = integrationsStr.split(",");
+          this.integrations = [];
+          this.integrationsScripts = [];
+          var thiz = this;
+          //TODO: eliminate duplicate code
+          for(var i=0;i<integrationsStrArray.length;i++){
+            var element = integrationsStrArray[i];
+            if(element==="") continue;
 
+            if (!element.includes("https:") && !element.includes("ssh:")) {
+              this.integrationsScripts.push(path
+                .basename(url.parse(element).pathname).replace(/@.*/, ''));
+              this.integrations.push(element);
+            } else {
+              var protocol = element.substr(0, element.indexOf("://") + 3);
+              var baseUrl = element.substr(element.indexOf("://") + 3);
+              var link = "git+" + protocol + "git@" + baseUrl;
+              var integrationFull = element.substr(element.lastIndexOf("/") + 1).replace(".git","");
 
-        var integrationsStrArray = integrationsStr.split(",");
-        this.integrations = [];
-        this.integrationsScripts = [];
-        var thiz = this;
-        //TODO: eliminate duplicate code
-        for(var i=0;i<integrationsStrArray.length;i++){
-          var element = integrationsStrArray[i];
-          if(element==="") continue;
-
-          if (!element.includes("https:") && !element.includes("ssh:")) {
-            this.integrationsScripts.push(path
-              .basename(url.parse(element).pathname).replace(/@.*/, ''));
-            this.integrations.push(element);
-          } else {
-            var protocol = element.substr(0, element.indexOf("://") + 3);
-            var baseUrl = element.substr(element.indexOf("://") + 3);
-            var link = "git+" + protocol + "git@" + baseUrl;
-            var integrationFull = element.substr(element.lastIndexOf("/") + 1).replace(".git","");
-
-            this.integrations.push(link);
+              this.integrations.push(link);
+            }
           }
         }
-
         done();
       }.bind(this));
 
